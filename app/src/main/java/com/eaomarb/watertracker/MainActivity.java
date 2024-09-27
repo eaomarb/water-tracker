@@ -1,37 +1,59 @@
 package com.eaomarb.watertracker;
 
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.eaomarb.watertracker.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private ProgressBar circleProgressBar;
+    private TextView waterTextView;
+    private ImageView glassWaterView;
+    private Button addWaterButton, removeWaterButton;
+
+    private int currentWaterCount = 0; // Contador de vasos de agua
+    private final int MAX_WATER_COUNT = 10; // Máximo de vasos
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        circleProgressBar = findViewById(R.id.circleProgressBar);
+        waterTextView = findViewById(R.id.waterTextView);
+        glassWaterView = findViewById(R.id.glassWaterView);
+        addWaterButton = findViewById(R.id.addWaterButton);
+        removeWaterButton = findViewById(R.id.removeWaterButton);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        // Botón para añadir vasos
+        addWaterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentWaterCount < MAX_WATER_COUNT) {
+                    currentWaterCount++;
+                    updateProgress();
+                }
+            }
+        });
+
+        // Botón para quitar vasos
+        removeWaterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentWaterCount > 0) {
+                    currentWaterCount--;
+                    updateProgress();
+                }
+            }
+        });
     }
 
+    private void updateProgress() {
+        circleProgressBar.setProgress(currentWaterCount);
+        waterTextView.setText(currentWaterCount + "/" + MAX_WATER_COUNT);
+    }
 }

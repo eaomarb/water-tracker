@@ -1,0 +1,23 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo del círculo (parte vacía) -->
+    <item>
+        <shape android:shape="ring"
+            android:useLevel="false"
+            android:thicknessRatio="20">
+            <solid android:color="#E0E0E0"/>
+        </shape>
+    </item>
+
+    <!-- Parte que se va llenando (parte azul) -->
+    <item>
+        <rotate
+            android:fromDegrees="270"
+            android:toDegrees="270">
+            <shape android:shape="ring"
+                android:useLevel="true"
+                android:thicknessRatio="20">
+                <solid android:color="#03A9F4"/>
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
