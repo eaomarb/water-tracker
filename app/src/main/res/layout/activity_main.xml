@@ -1,55 +1,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:padding="16dp">
 
-    <!-- ProgressBar Circular -->
-    <ProgressBar
-        android:id="@+id/circleProgressBar"
+    <!-- ImageView para el vaso -->
+    <ImageView
+        android:id="@+id/waterGlassImageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_centerInParent="true"
-        android:indeterminate="false"
-        android:max="10"
-    android:progress="0"
-    style="@android:style/Widget.ProgressBar.Horizontal"
-    android:rotation="270"
-    android:progressDrawable="@drawable/circular_progress_bar" />
+        android:layout_centerInParent="true" />
 
-    <TextView
-        android:id="@+id/waterTextView"
+    <!-- Botón para añadir vaso -->
+    <Button
+        android:id="@+id/addGlassButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="0/10"
-        android:textSize="24sp"
-        android:textColor="#000000"/>
-
-    <ImageView
-        android:id="@+id/glassWaterView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/circleProgressBar"
+        android:text="Añadir Vaso"
+        android:layout_below="@id/waterGlassImageView"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/water_glass" />
+        android:layout_marginTop="16dp" />
 
+    <!-- Botón para restar vaso -->
     <Button
-        android:id="@+id/addWaterButton"
+        android:id="@+id/removeGlassButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/glassWaterView"
-        android:layout_marginTop="16dp"
-        android:text="Añadir Vaso"/>
-
-    <Button
-        android:id="@+id/removeWaterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/glassWaterView"
-        android:layout_toEndOf="@id/addWaterButton"
+        android:text="Quitar Vaso"
+        android:layout_below="@id/waterGlassImageView"
+        android:layout_toEndOf="@id/addGlassButton"
         android:layout_marginStart="16dp"
-        android:text="Quitar Vaso"/>
-
+        android:layout_marginTop="16dp" />
 </RelativeLayout>
