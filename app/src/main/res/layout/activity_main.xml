@@ -1,33 +1,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:padding="16dp">
+
+    <!-- ProgressBar Circular -->
+    <ProgressBar
+        android:id="@+id/circleProgressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        android:indeterminate="false"
+        android:max="10"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:rotation="270" />
 
     <!-- ImageView para el vaso -->
     <ImageView
         android:id="@+id/waterGlassImageView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:src="@drawable/water_glass" />
 
-    <!-- Botón para añadir vaso -->
-    <Button
+    <ImageButton
         android:id="@+id/addGlassButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Añadir Vaso"
-        android:layout_below="@id/waterGlassImageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_below="@id/circleProgressBar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+    android:background="?attr/selectableItemBackground"
+    android:contentDescription="Añadir Vaso"
+    android:scaleType="fitCenter"
+    android:src="@drawable/add_water" />
 
     <!-- Botón para restar vaso -->
-    <Button
+    <ImageButton
         android:id="@+id/removeGlassButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quitar Vaso"
-        android:layout_below="@id/waterGlassImageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_below="@id/circleProgressBar"
         android:layout_toEndOf="@id/addGlassButton"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp" />
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="8dp"
+    android:background="?attr/selectableItemBackground"
+    android:contentDescription="Quitar Vaso"
+    android:scaleType="fitCenter"
+    android:src="@drawable/remove_water" />
+
 </RelativeLayout>

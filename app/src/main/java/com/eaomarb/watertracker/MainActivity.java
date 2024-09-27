@@ -7,30 +7,51 @@ import android.graphics.Paint;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 public class MainActivity extends AppCompatActivity {
-    private int totalGlasses = 10; // Total de vasos que se pueden consumir
-    private int currentGlasses = 0; // Vasos consumidos
-    private ImageView waterGlassImageView;
+    // Declaración de variables
+    private ProgressBar circleProgressBar; // Para la barra de progreso circular
+    private ImageView waterGlassImageView; // Para el vaso de agua
+    private ImageButton addGlassButton; // Para el botón de añadir vaso
+    private ImageButton removeGlassButton; // Para el botón de restar vaso
+    private int currentGlasses = 0; // Contador de vasos actuales
+    private final int maxGlasses = 10; // Número máximo de vasos
+    private VectorDrawableCompat waterDrawable; // Para el nivel de agua
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Inicializar las variables
+        circleProgressBar = findViewById(R.id.circleProgressBar);
         waterGlassImageView = findViewById(R.id.waterGlassImageView);
-        Button addGlassButton = findViewById(R.id.addGlassButton);
-        Button removeGlassButton = findViewById(R.id.removeGlassButton);
+        addGlassButton = findViewById(R.id.addGlassButton);
+        removeGlassButton = findViewById(R.id.removeGlassButton);
 
+        // Inicializar la barra de progreso
+        circleProgressBar.setMax(maxGlasses);
+        circleProgressBar.setProgress(currentGlasses);
+
+        // Configurar el listener para los botones
+        setupButtonListeners();
+    }
+
+    private void setupButtonListeners() {
         addGlassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentGlasses < totalGlasses) {
+                if (currentGlasses < maxGlasses) {
                     currentGlasses++;
-                    updateWaterLevel();
+                    circleProgressBar.setProgress(currentGlasses);
+                    updateWaterLevel(); // Método que ajusta el nivel de agua
                 }
             }
         });
@@ -40,15 +61,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (currentGlasses > 0) {
                     currentGlasses--;
-                    updateWaterLevel();
+                    circleProgressBar.setProgress(currentGlasses);
+                    updateWaterLevel(); // Método que ajusta el nivel de agua
                 }
             }
         });
-
-        // Inicializa el nivel de agua al inicio
-        updateWaterLevel();
     }
-
     private void updateWaterLevel() {
         // Creamos un Bitmap donde dibujar el vaso y el agua
         Bitmap bitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);
@@ -62,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         // Dibuja el nivel de agua
         Paint paint = new Paint();
         paint.setColor(0xFF57A4FF); // Color del agua
-        float waterHeight = (currentGlasses / (float) totalGlasses) * 478.61f; // Altura del agua basada en los vasos consumidos
+        float waterHeight = (currentGlasses / (float) maxGlasses) * 478.61f; // Altura del agua basada en los vasos consumidos
 
         // Ajustes para que el agua no toque los bordes
         float leftMargin = 34; // Margen izquierdo

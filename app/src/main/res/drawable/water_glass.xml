@@ -5,8 +5,8 @@
     android:viewportHeight="512">
 
   <path
-  android:pathData="M411.83,478.61L100,478.61V0H411.83Z"
-  android:fillColor="#D1E7F8" /> <!-- Color del agua -->
+      android:pathData="M411.83,478.61L100,478.61V0H411.83Z"
+      android:fillColor="#D1E7F8" /> <!-- Color del agua -->
 
   <path
       android:pathData="M411.83,111.3l-311.65,0l0,367.3l33.39,0l0,33.39l244.87,0l0,-33.39l33.39,0z"
