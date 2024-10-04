@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     // Declaración de variables
     private ProgressBar circleProgressBar; // Para la barra de progreso circular
     private ImageView waterGlassImageView; // Para el vaso de agua
-    private ImageButton addGlassButton; // Para el botón de añadir vaso
-    private ImageButton removeGlassButton; // Para el botón de restar vaso
+    private ImageView addGlassButton; // Para el botón de añadir vaso
+    private ImageView removeGlassButton; // Para el botón de restar vaso
     private int currentGlasses = 0; // Contador de vasos actuales
     private final int maxGlasses = 10; // Número máximo de vasos
     private VectorDrawableCompat waterDrawable; // Para el nivel de agua
