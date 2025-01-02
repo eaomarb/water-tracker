@@ -5,8 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowMetrics;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,21 +20,47 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 public class MainActivity extends AppCompatActivity {
+    private final int maxGlasses = 10; // Número máximo de vasos
     // Declaración de variables
     private ProgressBar circleProgressBar; // Para la barra de progreso circular
     private ImageView waterGlassImageView; // Para el vaso de agua
     private ImageView addGlassButton; // Para el botón de añadir vaso
     private ImageView removeGlassButton; // Para el botón de restar vaso
     private int currentGlasses = 0; // Contador de vasos actuales
-    private final int maxGlasses = 10; // Número máximo de vasos
     private VectorDrawableCompat waterDrawable; // Para el nivel de agua
+    private FrameLayout adContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new Thread(
+                () -> {
+                    // Initialize the Google Mobile Ads SDK on a background thread.
+                    MobileAds.initialize(this, initializationStatus -> {
+                    });
+                })
+                .start();
+
+        // Inicializar el contenedor del anuncio
+        adContainerView = findViewById(R.id.adContainerView);
+
+        // Inicializar Mobile Ads SDK
+        MobileAds.initialize(this, initializationStatus -> {});
+
+        // Configurar y cargar el anuncio
+        loadBannerAd();
         // Inicializar las variables
         circleProgressBar = findViewById(R.id.circleProgressBar);
         waterGlassImageView = findViewById(R.id.waterGlassImageView);
@@ -67,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void updateWaterLevel() {
         // Creamos un Bitmap donde dibujar el vaso y el agua
         Bitmap bitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);
@@ -114,5 +146,51 @@ public class MainActivity extends AppCompatActivity {
         // Asigna el Bitmap al ImageView
         waterGlassImageView.setImageBitmap(bitmap);
     }
+
+    // Get the ad size with screen width.
+    public AdSize getAdSize() {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int adWidthPixels = displayMetrics.widthPixels;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
+            adWidthPixels = windowMetrics.getBounds().width();
+        }
+
+        float density = displayMetrics.density;
+        int adWidth = (int) (adWidthPixels / density);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth);
+    }
+
+
+    private void loadBannerAd() {
+        // Crear un nuevo AdView
+        AdView adView = new AdView(this);
+        adView.setAdUnitId("ca-app-pub-3940256099942544/9214589741"); // ID de prueba
+        adView.setAdSize(getAdSize());
+
+        // Reemplazar el contenedor con el nuevo AdView
+        adContainerView.removeAllViews();
+        adContainerView.addView(adView);
+
+        // Cargar el anuncio
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e("AdMob", "Error al cargar el anuncio: " + adError.getMessage());
+            }
+
+            @Override
+            public void onAdLoaded() {
+                Log.d("AdMob", "Anuncio cargado correctamente.");
+            }
+        });
+
+    }
+
+
 
 }
