@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
@@ -145,7 +146,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Asigna el Bitmap al ImageView
         waterGlassImageView.setImageBitmap(bitmap);
+
+        // Actualiza el porcentaje en el TextView
+        int percentage = (int) ((currentGlasses / (float) maxGlasses) * 100);
+        TextView percentageText = findViewById(R.id.percentageText);
+        percentageText.setText(percentage + "%");
     }
+
 
     // Get the ad size with screen width.
     public AdSize getAdSize() {

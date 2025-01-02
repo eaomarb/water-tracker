@@ -1,22 +1,22 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="512dp"
-    android:height="512dp"
-    android:viewportWidth="512"
-    android:viewportHeight="512">
-
+    android:width="100dp"
+    android:height="160dp"
+    android:viewportWidth="100"
+    android:viewportHeight="160">
   <path
-      android:pathData="M411.83,478.61L100,478.61V0H411.83Z"
-      android:fillColor="#D1E7F8" /> <!-- Color del agua -->
-
+      android:pathData="m4.61,17.25 l44.93,-4.21 43.13,3.41 3.81,4.41 -16.25,118.15 -5.56,3.47 -8.12,1.03 -25.64,-0.04 -20,-2.41 -2.73,-13.9 -3.4,-26.84 -6.45,-46.21z"
+      android:strokeAlpha="0"
+      android:strokeWidth="0.5"
+      android:fillColor="#d1e7f8"
+      android:strokeColor="#000000"/>
   <path
-      android:pathData="M411.83,111.3l-311.65,0l0,367.3l33.39,0l0,33.39l244.87,0l0,-33.39l33.39,0z"
-      android:fillColor="#D1E7F8"/> <!-- Fondo del vaso -->
-
+      android:pathData="M4.35,20.4C3.06,10.49 97.82,11.1 96.45,21L80,140c-0.68,4.95 -59.35,4.96 -60,0z"
+      android:strokeWidth="4"
+      android:fillColor="#00000000"
+      android:strokeColor="#000000"/>
   <path
-      android:fillColor="#FF000000"
-      android:pathData="M378.43,0l-244.87,0l-33.39,0l0,33.39l0,445.22l33.39,0l0,-445.22l244.87,0l0,445.22l33.39,0l0,-445.22l0,-33.39z"/> <!-- Borde del vaso -->
-
-  <path
-      android:fillColor="#FF000000"
-      android:pathData="M133.57,478.61h244.87v33.39h-244.87z"/> <!-- Borde del vaso -->
+      android:pathData="M3.75,19.66C29.14,27.13 70.98,28.53 95.96,19.52"
+      android:strokeWidth="4"
+      android:fillColor="#00000000"
+      android:strokeColor="#000000"/>
 </vector>
