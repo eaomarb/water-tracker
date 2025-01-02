@@ -42,28 +42,26 @@
         android:id="@+id/removeGlassButton"
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:layout_marginTop="-32dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="16dp"
         android:contentDescription="Quitar Vaso"
         android:scaleType="fitCenter"
         android:src="@drawable/remove_water"
-        app:layout_constraintEnd_toEndOf="@+id/waterGlassImageView"
-        app:layout_constraintStart_toStartOf="@+id/waterGlassImageView"
+        app:layout_constraintEnd_toStartOf="@+id/addGlassButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
 
     <ImageView
         android:id="@+id/addGlassButton"
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="-32dp"
+        android:layout_marginEnd="16dp"
         android:contentDescription="Añadir Vaso"
         android:scaleType="fitCenter"
         android:src="@drawable/add_water"
-        app:layout_constraintEnd_toEndOf="@+id/waterGlassImageView"
-        app:layout_constraintStart_toStartOf="@+id/waterGlassImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/removeGlassButton"
         app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
 
     <!-- Botón para restar vaso -->
