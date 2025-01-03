@@ -1,19 +1,11 @@
 package com.eaomarb.watertracker;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,11 +19,10 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class MainActivity extends AppCompatActivity {
     private final int maxGlasses = 10; // Número máximo de vasos
+    private final int maxProgress = 10; // Máximo de vasos
     // Declaración de variables
     private ProgressBar circleProgressBar; // Para la barra de progreso circular
     private ImageView waterGlassImageView; // Para el vaso de agua
@@ -40,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
     private int currentGlasses = 0; // Contador de vasos actuales
     private VectorDrawableCompat waterDrawable; // Para el nivel de agua
     private FrameLayout adContainerView;
+    private WaterLevelView waterLevelView;
+    private int waterLevel = 0; // Nivel de agua actual (0 a 100)
+    private int currentProgress = 0; // Inicialmente a 0
+    private TextView percentageText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         adContainerView = findViewById(R.id.adContainerView);
 
         // Inicializar Mobile Ads SDK
-        MobileAds.initialize(this, initializationStatus -> {});
+        MobileAds.initialize(this, initializationStatus -> {
+        });
 
         // Configurar y cargar el anuncio
         loadBannerAd();
@@ -67,90 +64,40 @@ public class MainActivity extends AppCompatActivity {
         waterGlassImageView = findViewById(R.id.waterGlassImageView);
         addGlassButton = findViewById(R.id.addGlassButton);
         removeGlassButton = findViewById(R.id.removeGlassButton);
+        percentageText = findViewById(R.id.percentageText);
+
+        waterLevelView = findViewById(R.id.waterLevelView);
+
 
         // Inicializar la barra de progreso
         circleProgressBar.setMax(maxGlasses);
         circleProgressBar.setProgress(currentGlasses);
 
         // Configurar el listener para los botones
-        setupButtonListeners();
-    }
+        circleProgressBar.setMax(maxProgress);
 
-    private void setupButtonListeners() {
-        addGlassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentGlasses < maxGlasses) {
-                    currentGlasses++;
-                    circleProgressBar.setProgress(currentGlasses);
-                    updateWaterLevel(); // Método que ajusta el nivel de agua
-                }
+        // Listener para añadir un vaso
+        addGlassButton.setOnClickListener(v -> {
+            if (currentProgress < maxProgress) {
+                currentProgress++;
+                updateUI();
             }
         });
 
-        removeGlassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentGlasses > 0) {
-                    currentGlasses--;
-                    circleProgressBar.setProgress(currentGlasses);
-                    updateWaterLevel(); // Método que ajusta el nivel de agua
-                }
+        // Listener para quitar un vaso
+        removeGlassButton.setOnClickListener(v -> {
+            if (currentProgress > 0) {
+                currentProgress--;
+                updateUI();
             }
         });
     }
 
-    private void updateWaterLevel() {
-        // Creamos un Bitmap donde dibujar el vaso y el agua
-        Bitmap bitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
 
-        // Dibuja el vaso
-        VectorDrawable vectorDrawable = (VectorDrawable) getResources().getDrawable(R.drawable.water_glass);
-        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        vectorDrawable.draw(canvas);
-
-        // Dibuja el nivel de agua
-        Paint paint = new Paint();
-        paint.setColor(0xFF57A4FF); // Color del agua
-        float waterHeight = (currentGlasses / (float) maxGlasses) * 478.61f; // Altura del agua basada en los vasos consumidos
-
-        // Ajustes para que el agua no toque los bordes
-        float leftMargin = 34; // Margen izquierdo
-        float rightMargin = 34; // Margen derecho
-        float topMargin = 34; // Margen superior
-
-        // Dibuja el agua como un rectángulo
-        if (currentGlasses > 0) {
-            canvas.drawRect(
-                    100 + leftMargin,
-                    478.61f - waterHeight + topMargin,  // Ajusta la altura de agua con el margen superior
-                    411.83f - rightMargin,
-                    478.61f  // Mantén el borde inferior del vaso
-                    , paint);
-        }
-
-        // Dibuja el borde del vaso
-        Paint borderPaint = new Paint();
-        borderPaint.setColor(Color.BLACK); // Color del borde
-        borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setStrokeWidth(4); // Grosor del borde
-        // Dibuja el borde del vaso
-        canvas.drawRect(
-                100,
-                0,
-                411.83f,
-                478.61f,
-                borderPaint
-        );
-
-        // Asigna el Bitmap al ImageView
-        waterGlassImageView.setImageBitmap(bitmap);
-
-        // Actualiza el porcentaje en el TextView
-        int percentage = (int) ((currentGlasses / (float) maxGlasses) * 100);
-        TextView percentageText = findViewById(R.id.percentageText);
-        percentageText.setText(percentage + "%");
+    private void updateUI() {
+        circleProgressBar.setProgress(currentProgress);
+        waterLevelView.setWaterPercentage((currentProgress * 100f) / maxProgress);
+        percentageText.setText((int) ((currentProgress * 100f) / maxProgress) + "%");
     }
 
 
@@ -197,7 +144,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
-
 }

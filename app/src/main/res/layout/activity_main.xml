@@ -6,18 +6,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
-
     <!-- ProgressBar Circular -->
-
-    <!-- ImageView para el vaso -->
-
     <ProgressBar
         android:id="@+id/circleProgressBar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="400dp"
         android:layout_height="400dp"
         android:layout_centerInParent="true"
-        android:layout_marginTop="16dp"
         android:indeterminate="false"
         android:max="10"
         android:progress="0"
@@ -28,17 +23,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/waterGlassImageView"
+    <!-- Contenedor del vaso con nivel de agua -->
+    <FrameLayout
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/water_glass"
         app:layout_constraintBottom_toBottomOf="@+id/circleProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/circleProgressBar"
-        app:layout_constraintTop_toTopOf="@+id/circleProgressBar" />
+        app:layout_constraintTop_toTopOf="@+id/circleProgressBar">
 
+        <!-- Imagen del vaso -->
+        <ImageView
+            android:id="@+id/waterGlassImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/water_glass" />
+
+        <!-- Vista personalizada para el nivel de agua -->
+        <com.eaomarb.watertracker.WaterLevelView
+            android:id="@+id/waterLevelView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToOutline="true" />
+    </FrameLayout>
+
+    <!-- Botones para añadir y quitar vasos -->
     <ImageView
         android:id="@+id/removeGlassButton"
         android:layout_width="125dp"
@@ -65,20 +74,20 @@
         app:layout_constraintStart_toEndOf="@+id/removeGlassButton"
         app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
 
+    <!-- Texto de porcentaje -->
     <TextView
         android:id="@+id/percentageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:text="0%"
         android:textColor="#000000"
         android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-
+    <!-- Contenedor de publicidad -->
     <FrameLayout
         android:id="@+id/adContainerView"
         android:layout_width="match_parent"
@@ -93,11 +102,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/9214589741"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            ads:adUnitId="ca-app-pub-3940256099942544/9214589741" />
     </FrameLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
