@@ -3,17 +3,21 @@ package com.eaomarb.watertracker;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import android.animation.ValueAnimator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class WaterLevelView extends View {
 
-    private Paint waterPaint;
-    private float waterPercentage = 0; // Nivel de agua (0% - 100%)
-    private float maxHeight = 0; // Altura máxima del vaso
-    private float maxWidth = 0;  // Ancho máximo del vaso
+    private Path glassPath; // Path del vaso
+    private Paint paint; // Pintura para dibujar
+    private float waterLevelPercentage = 0; // Nivel de agua (0% - 100%)
+    private float animatedWaterHeight = 0f;  // Variable para la altura animada del agua
 
     public WaterLevelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -21,61 +25,139 @@ public class WaterLevelView extends View {
     }
 
     private void init() {
-        // Pintura para el agua
-        waterPaint = new Paint();
-        waterPaint.setColor(0xFF57A4FF); // Color del agua
-        waterPaint.setStyle(Paint.Style.FILL);
+        // Inicializar el Path del vaso
+        glassPath = new Path();
+        glassPath.moveTo(4.91f, 19.96f);
+        glassPath.lineTo(9.22f, 16.45f);
+        glassPath.lineTo(42.92f, 12.64f);
+        glassPath.lineTo(63.98f, 13.94f);
+        glassPath.lineTo(86.05f, 15.24f);
+        glassPath.lineTo(93.27f, 17.25f);
+        glassPath.lineTo(96.98f, 19.96f);
+        glassPath.lineTo(96.08f, 36.51f);
+        glassPath.lineTo(93.07f, 54.76f);
+        glassPath.lineTo(87.85f, 89.16f);
+        glassPath.lineTo(82.84f, 127.37f);
+        glassPath.lineTo(80.33f, 142.01f);
+        glassPath.lineTo(41.71f, 144.32f);
+        glassPath.lineTo(21.55f, 140.81f);
+        glassPath.lineTo(18.94f, 120.75f);
+        glassPath.lineTo(11.92f, 72.11f);
+        glassPath.close();
+
+        // Inicializar el Paint
+        paint = new Paint();
+        paint.setAntiAlias(true);
     }
 
-    public void setWaterPercentage(float percentage) {
-        this.waterPercentage = percentage;
-        invalidate(); // Redibuja la vista
-    }
+    public void setWaterLevelPercentage(float percentage) {
+        // Limitar el porcentaje entre 0 y 100
+        if (percentage < 0) percentage = 0;
+        if (percentage > 100) percentage = 100;
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        maxHeight = h; // Guardamos la altura máxima del vaso
-        maxWidth = w;  // Guardamos el ancho máximo del vaso
+        // Si el porcentaje cambia, animar la altura del agua
+        ValueAnimator animator = ValueAnimator.ofFloat(animatedWaterHeight, percentage);
+        animator.setDuration(600); // Duración de la animación en milisegundos
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            animatedWaterHeight = (float) animation.getAnimatedValue();
+            invalidate(); // Redibujar la vista en cada actualización
+        });
+        animator.start();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // Path del vaso (simplificado, ajusta según necesites)
+        // Limpiar el canvas
+        canvas.drawColor(Color.TRANSPARENT);
+
+        // Dimensiones del canvas
+        float canvasWidth = getWidth();
+        float canvasHeight = getHeight();
+
+        // Calcular el tamaño original del vaso
+        RectF bounds = new RectF();
+        glassPath.computeBounds(bounds, true);
+        float glassWidth = bounds.width();
+        float glassHeight = bounds.height();
+
+        // Escalar el vaso para ajustarlo al canvas, dejando un margen
+        float scaleFactor = 3.5f; // Ajuste perfecto
+        canvas.scale(scaleFactor, scaleFactor);
+
+        // Centramos el vaso en el Canvas
+        float offsetX = (canvasWidth / scaleFactor - glassWidth) / 2 - bounds.left;
+        float offsetY = (canvasHeight / scaleFactor - glassHeight) / 2 - bounds.top;
+        canvas.translate(offsetX, offsetY);
+
+        // Calcular la altura del agua según el porcentaje animado
+        float waterHeight = glassHeight * (animatedWaterHeight / 100f); // Usar el valor animado
+        RectF waterRect = new RectF(bounds.left, bounds.bottom - waterHeight, bounds.right, bounds.bottom);
+
+        // Dibujar el agua dentro del vaso (en el fondo)
         Path waterPath = new Path();
+        waterPath.addRect(waterRect, Path.Direction.CW);
 
-        // Escalar las coordenadas del path para que se ajusten al tamaño del vaso
-        float scaleX = maxWidth / 150f;  // Ajuste a la anchura del vaso (ajusta el valor 400f según tu base)
-        float scaleY = maxHeight / 150f; // Ajuste a la altura del vaso (ajusta el valor 400f según tu base)
+        // Dibujar el fondo del vaso
+        Path backgroundPath = new Path();
+        backgroundPath.moveTo(4.61f, 17.25f);
+        backgroundPath.lineTo(4.61f + 44.93f, 17.25f - 4.21f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f, 17.25f - 4.21f + 3.41f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f, 17.25f - 4.21f + 3.41f + 4.41f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f - 8.12f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f + 1.03f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f - 8.12f - 25.64f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f + 1.03f - 0.04f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f - 8.12f - 25.64f - 20f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f + 1.03f - 0.04f - 2.41f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f - 8.12f - 25.64f - 20f - 2.73f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f + 1.03f - 0.04f - 2.41f - 13.9f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f - 8.12f - 25.64f - 20f - 2.73f - 3.4f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f + 1.03f - 0.04f - 2.41f - 13.9f - 26.84f);
+        backgroundPath.lineTo(4.61f + 44.93f + 43.13f + 3.81f - 16.25f - 5.56f - 8.12f - 25.64f - 20f - 2.73f - 3.4f - 6.45f, 17.25f - 4.21f + 3.41f + 4.41f + 118.15f + 3.47f + 1.03f - 0.04f - 2.41f - 13.9f - 26.84f - 46.21f);
+        backgroundPath.close();
 
-        // Define el path original
-        waterPath.moveTo(4.91f * scaleX, 19.96f * scaleY);
-        waterPath.lineTo((4.91f + 4.31f) * scaleX, (19.96f - 3.51f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f) * scaleX, (19.96f - 3.96f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f) * scaleX, (19.96f - 3.96f + 1.3f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f - 5.01f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f + 38.21f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f - 5.01f - 2.51f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f + 38.21f + 14.64f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f - 5.01f - 2.51f - 38.62f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f + 38.21f + 14.64f + 2.31f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f - 5.01f - 2.51f - 38.62f - 20.16f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f + 38.21f + 14.64f + 2.31f - 3.51f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f - 5.01f - 2.51f - 38.62f - 20.16f - 2.61f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f + 38.21f + 14.64f + 2.31f - 3.51f - 20.06f) * scaleY);
-        waterPath.lineTo((4.91f + 4.31f + 33.7f + 20.06f + 22.07f + 7.22f + 3.71f - 0.9f - 3.01f - 5.22f - 5.01f - 2.51f - 38.62f - 20.16f - 2.61f - 7.02f) * scaleX, (19.96f - 3.96f + 1.3f + 1.3f + 2.01f + 2.71f + 16.55f + 18.25f + 34.4f + 38.21f + 14.64f + 2.31f - 3.51f - 20.06f - 48.64f) * scaleY);
+        // Dibujar el fondo del vaso
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.parseColor("#d1e7f8"));
+        canvas.drawPath(backgroundPath, paint);
 
-
-        // Ajustar el nivel del agua en función del porcentaje
-        float waterHeight = maxHeight * (waterPercentage / 100);
-
-        // Recortamos el nivel del agua dentro del vaso
+        // Dibujar el agua recortada por el vaso
         canvas.save();
-        canvas.clipRect(0, maxHeight - waterHeight, maxWidth, maxHeight);
-        canvas.drawPath(waterPath, waterPaint); // Dibujamos el agua
+        canvas.clipPath(glassPath); // El agua solo se verá dentro del vaso
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.parseColor("#57a4ff"));
+        canvas.drawPath(waterPath, paint);
         canvas.restore();
+
+        // Dibujar los bordes del vaso con los nuevos paths
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(4); // Grosor de trazo ajustado a 4
+        paint.setStrokeJoin(Paint.Join.ROUND);  // Borde suave en las uniones
+        paint.setStrokeCap(Paint.Cap.ROUND);    // Borde redondeado en las terminaciones
+
+        // Path 1 (Borde superior del vaso)
+        Path path1 = new Path();
+        path1.moveTo(4.35f, 20.4f);
+        path1.cubicTo(3.06f, 10.49f, 97.82f, 11.1f, 96.45f, 21f);
+        path1.lineTo(80f, 140f);
+        path1.cubicTo(79.32f, 144.95f, 20.65f, 144.96f, 20f, 140f);
+        path1.close();
+
+        // Path 2 (Borde inferior del vaso)
+        Path path2 = new Path();
+        path2.moveTo(3.75f, 19.66f);
+        path2.cubicTo(29.14f, 27.13f, 70.98f, 28.53f, 95.96f, 19.52f);
+
+        // Dibujar los paths de los bordes con suavizado
+        canvas.drawPath(path1, paint);
+        canvas.drawPath(path2, paint);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        // Aumentar la resolución del Canvas
+        setLayerType(LAYER_TYPE_HARDWARE, null);
     }
 }
