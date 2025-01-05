@@ -118,7 +118,7 @@ public class WaterLevelView extends View {
 
         // Dibujar el fondo del vaso
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.parseColor("#d1e7f8"));
+        paint.setColor(Color.parseColor("#d7f4ff"));
         canvas.drawPath(backgroundPath, paint);
 
         // Dibujar el agua recortada por el vaso
