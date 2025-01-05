@@ -125,7 +125,7 @@ public class WaterLevelView extends View {
         canvas.save();
         canvas.clipPath(glassPath); // El agua solo se verá dentro del vaso
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.parseColor("#57a4ff"));
+        paint.setColor(Color.parseColor("#00b2ff"));
         canvas.drawPath(waterPath, paint);
         canvas.restore();
 

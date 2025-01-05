@@ -59,7 +59,8 @@
         app:layout_constraintEnd_toStartOf="@+id/addGlassButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/circleProgressBar"
+        tools:layout_editor_absoluteY="400dp" />
 
     <ImageView
         android:id="@+id/addGlassButton"
@@ -75,26 +76,29 @@
         app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
 
     <!-- Texto de porcentaje -->
+
+    <!-- Contenedor de publicidad -->
+
     <TextView
         android:id="@+id/percentageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
         android:text="0%"
         android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="40sp"
+        ads:layout_constraintBottom_toTopOf="@+id/adContainerView"
+        ads:layout_constraintEnd_toEndOf="parent"
+        ads:layout_constraintStart_toStartOf="parent"
+        ads:layout_constraintTop_toBottomOf="@+id/addGlassButton" />
 
-    <!-- Contenedor de publicidad -->
     <FrameLayout
         android:id="@+id/adContainerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
