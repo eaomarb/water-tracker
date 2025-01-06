@@ -1,23 +1,44 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Fondo del círculo (parte vacía) -->
     <item>
-        <shape android:shape="ring"
+        <shape
+            android:shape="ring"
             android:useLevel="false"
             android:thicknessRatio="20">
-            <solid android:color="#d7f4ff"/>
+            <solid android:color="#d7f4ff" />
+            <stroke
+                android:width="6dp"
+            android:color="#bdeaff" />
         </shape>
     </item>
 
-    <!-- Parte que se va llenando (parte azul) -->
+    <!-- Parte que se va llenando (con gradiente) -->
     <item>
         <rotate
             android:fromDegrees="270"
             android:toDegrees="270">
-            <shape android:shape="ring"
+            <shape
+                android:shape="ring"
                 android:useLevel="true"
                 android:thicknessRatio="20">
-                <solid android:color="#00b2ff"/>
+                <gradient
+                    android:startColor="#00b2ff"
+                    android:endColor="#0099e6"
+                    android:angle="0" />
             </shape>
         </rotate>
+    </item>
+
+    <!-- Sombra exterior -->
+    <item>
+        <shape
+            android:shape="ring"
+            android:useLevel="false"
+            android:thicknessRatio="20">
+            <solid android:color="#00000000" />
+            <stroke
+                android:width="6dp"
+            android:color="#a3d4ff" />
+        </shape>
     </item>
 </layer-list>

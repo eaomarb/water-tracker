@@ -3,7 +3,6 @@ package com.eaomarb.watertracker;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -16,7 +15,6 @@ public class WaterLevelView extends View {
 
     private Path glassPath; // Path del vaso
     private Paint paint; // Pintura para dibujar
-    private float waterLevelPercentage = 0; // Nivel de agua (0% - 100%)
     private float animatedWaterHeight = 0f;  // Variable para la altura animada del agua
 
     public WaterLevelView(Context context, AttributeSet attrs) {

@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowMetrics;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -26,16 +25,14 @@ public class MainActivity extends AppCompatActivity {
     private final int maxProgress = 10; // Máximo de vasos
     // Declaración de variables
     private ProgressBar circleProgressBar; // Para la barra de progreso circular
-    private ImageView waterGlassImageView; // Para el vaso de agua
     private ImageView addGlassButton; // Para el botón de añadir vaso
     private ImageView removeGlassButton; // Para el botón de restar vaso
-    private int currentGlasses = 0; // Contador de vasos actuales
     private VectorDrawableCompat waterDrawable; // Para el nivel de agua
     private FrameLayout adContainerView;
     private WaterLevelView waterLevelView;
-    private int waterLevel = 0; // Nivel de agua actual (0 a 100)
     private int currentProgress = 0; // Nivel inicial de agua es 0
     private TextView percentageText;
+    private TextView glassCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Inicializar las variables
         circleProgressBar = findViewById(R.id.circleProgressBar);
-        waterGlassImageView = findViewById(R.id.waterGlassImageView);
         addGlassButton = findViewById(R.id.addGlassButton);
         removeGlassButton = findViewById(R.id.removeGlassButton);
         percentageText = findViewById(R.id.percentageText);
+        glassCount = findViewById(R.id.glassCount);
         waterLevelView = findViewById(R.id.waterLevelView);
 
-        waterGlassImageView.setVisibility(View.GONE);
 
         // Inicializar la barra de progreso
         circleProgressBar.setMax(maxGlasses);
@@ -74,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Configurar los listeners para los botones
         circleProgressBar.setMax(maxProgress);
+
+        percentageText.bringToFront();
 
         // Listener para añadir un vaso
         addGlassButton.setOnClickListener(v -> {
@@ -98,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI() {
         // Actualizar la barra de progreso
         circleProgressBar.setProgress(currentProgress);
+        int count = currentProgress;
 
         // Actualizar el nivel de agua en el WaterLevelView
         float waterPercentage = (currentProgress / (float) maxProgress) * 100;
@@ -105,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Actualizar el texto del porcentaje
         percentageText.setText((int) waterPercentage + "%");
+        glassCount.setText(String.valueOf(currentProgress) + "/10");
+
     }
 
     // Obtener el tamaño del anuncio con el ancho de la pantalla.

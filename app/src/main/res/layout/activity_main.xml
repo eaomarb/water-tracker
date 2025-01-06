@@ -25,6 +25,7 @@
 
     <!-- Contenedor del vaso con nivel de agua -->
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="200dp"
         android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="@+id/circleProgressBar"
@@ -32,65 +33,21 @@
         app:layout_constraintStart_toStartOf="@+id/circleProgressBar"
         app:layout_constraintTop_toTopOf="@+id/circleProgressBar">
 
-        <!-- Imagen del vaso -->
-        <ImageView
-            android:id="@+id/waterGlassImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/water_glass" />
-
         <!-- Vista personalizada para el nivel de agua -->
         <com.eaomarb.watertracker.WaterLevelView
             android:id="@+id/waterLevelView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToOutline="true" />
+
+        <!-- Botones para añadir y quitar vasos -->
+
+
+        <!-- Cantidad de vasos consumidos -->
+        <!-- Porcentaje consumido -->
+
+
     </FrameLayout>
-
-    <!-- Botones para añadir y quitar vasos -->
-    <ImageView
-        android:id="@+id/removeGlassButton"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="Quitar Vaso"
-        android:scaleType="fitCenter"
-        android:src="@drawable/remove_water"
-        app:layout_constraintEnd_toStartOf="@+id/addGlassButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleProgressBar"
-        tools:layout_editor_absoluteY="400dp" />
-
-    <ImageView
-        android:id="@+id/addGlassButton"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="Añadir Vaso"
-        android:scaleType="fitCenter"
-        android:src="@drawable/add_water"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/removeGlassButton"
-        app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
-
-    <!-- Texto de porcentaje -->
-
-    <!-- Contenedor de publicidad -->
-
-    <TextView
-        android:id="@+id/percentageText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="70dp"
-        android:text="0%"
-        android:textColor="#000000"
-        android:textSize="40sp"
-        ads:layout_constraintBottom_toTopOf="@+id/adContainerView"
-        ads:layout_constraintEnd_toEndOf="parent"
-        ads:layout_constraintStart_toStartOf="parent"
-        ads:layout_constraintTop_toBottomOf="@+id/addGlassButton" />
 
     <FrameLayout
         android:id="@+id/adContainerView"
@@ -108,4 +65,69 @@
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-3940256099942544/9214589741" />
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/addGlassButton"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="Añadir Vaso"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_water"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/removeGlassButton"
+        app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
+
+    <ImageView
+        android:id="@+id/removeGlassButton"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="Quitar Vaso"
+        android:scaleType="fitCenter"
+        android:src="@drawable/remove_water"
+        app:layout_constraintEnd_toStartOf="@+id/addGlassButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/circleProgressBar" />
+
+    <TextView
+        android:id="@+id/percentageText"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp"
+        android:layout_marginTop="125dp"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:shadowColor="#ff857a"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="4"
+        android:text="0%"
+        android:textColor="#ff4d00"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        ads:layout_constraintEnd_toStartOf="@+id/addGlassButton"
+        ads:layout_constraintStart_toEndOf="@+id/removeGlassButton"
+        ads:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+    <TextView
+        android:id="@+id/glassCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="125dp"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:shadowColor="#bdeaff"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="4"
+        android:text="0"
+        android:textColor="#00b2ff"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        ads:layout_constraintBottom_toTopOf="@+id/adContainerView"
+        ads:layout_constraintEnd_toStartOf="@+id/addGlassButton"
+        ads:layout_constraintHorizontal_bias="0.368"
+        ads:layout_constraintStart_toEndOf="@+id/removeGlassButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
