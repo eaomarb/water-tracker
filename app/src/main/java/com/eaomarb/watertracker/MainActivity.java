@@ -19,6 +19,17 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import androidx.annotation.NonNull;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.AdRequest;
+
+
 
 public class MainActivity extends AppCompatActivity {
     private final int maxGlasses = 10; // Número máximo de vasos
@@ -33,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private int currentProgress = 0; // Nivel inicial de agua es 0
     private TextView percentageText;
     private TextView glassCount;
+    private InterstitialAd mInterstitialAd;
+    private boolean isLoadingAd = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Cargar el anuncio
         loadBannerAd();
+        loadInterstitialAd();
 
         // Inicializar las variables
         circleProgressBar = findViewById(R.id.circleProgressBar);
@@ -94,19 +108,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        // Actualizar la barra de progreso
         circleProgressBar.setProgress(currentProgress);
-        int count = currentProgress;
-
-        // Actualizar el nivel de agua en el WaterLevelView
         float waterPercentage = (currentProgress / (float) maxProgress) * 100;
+
         waterLevelView.setWaterLevelPercentage(waterPercentage);
-
-        // Actualizar el texto del porcentaje
         percentageText.setText((int) waterPercentage + "%");
-        glassCount.setText(String.valueOf(currentProgress) + "/10");
+        glassCount.setText(currentProgress + "/10");
 
+        // Mostrar anuncio intersticial si llega a 10 vasos
+        if (currentProgress == maxProgress && mInterstitialAd != null) {
+            mInterstitialAd.show(this);
+        }
     }
+
+
 
     // Obtener el tamaño del anuncio con el ancho de la pantalla.
     public AdSize getAdSize() {
@@ -149,4 +164,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setInterstitialCallbacks() {
+        if (mInterstitialAd != null) {
+            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    // El usuario cerró el anuncio
+                    Log.d("AdMob", "Anuncio cerrado.");
+                    mInterstitialAd = null;
+                    loadInterstitialAd(); // Cargar un nuevo anuncio
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull com.google.android.gms.ads.AdError adError) {
+                    Log.e("AdMob", "Error al mostrar el anuncio: " + adError.getMessage());
+                    mInterstitialAd = null;
+                }
+
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    Log.d("AdMob", "Anuncio mostrado.");
+                }
+            });
+        }
+    }
+
+
+    private void loadInterstitialAd() {
+        if (mInterstitialAd != null) {
+            return; // Ya existe un anuncio cargado
+        }
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        mInterstitialAd = interstitialAd;
+                        Log.d("AdMob", "Anuncio intersticial cargado.");
+                        setInterstitialCallbacks();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        mInterstitialAd = null;
+                        Log.e("AdMob", "Error al cargar el anuncio: " + loadAdError.getMessage());
+                    }
+                });
+    }
+
+
 }
