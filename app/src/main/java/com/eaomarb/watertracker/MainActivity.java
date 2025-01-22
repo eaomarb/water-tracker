@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadBannerAd() {
         // Crear un nuevo AdView
         AdView adView = new AdView(this);
-        adView.setAdUnitId("ca-app-pub-3940256099942544/9214589741"); // ID de prueba
+        adView.setAdUnitId("ca-app-pub-5188606412659240/2453798203");
         adView.setAdSize(getAdSize());
 
         // Reemplazar el contenedor con el nuevo AdView
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
         AdRequest adRequest = new AdRequest.Builder().build();
 
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest,
+        InterstitialAd.load(this, "ca-app-pub-5188606412659240/2688875578", adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {

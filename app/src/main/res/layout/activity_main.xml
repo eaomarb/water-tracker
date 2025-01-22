@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/9214589741" />
+            ads:adUnitId="ca-app-pub-5188606412659240/2453798203" />
     </FrameLayout>
 
     <ImageView
